@@ -14,6 +14,7 @@ const flash = require("connect-flash");
 const passport = require("passport");
 const User = require("./models/user.js");
 const localStrategy = require("passport-local");
+const Listing = require("./models/listing.js");
 const { setHeapSnapshotNearHeapLimit } = require("v8");
 
 
@@ -86,6 +87,14 @@ app.use((req, res, next) => {
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
 app.use("/", userRouter);
+
+app.get(
+  "/",
+  wrapAsync(async (req, res, next) => {
+    const allListings = await Listing.find({});
+    res.render("listings/index.ejs", { allListings });
+  })
+);
 
 // 404 Route
 app.all("*",wrapAsync(async (req, res, next) => {
