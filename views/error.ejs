@@ -1,0 +1,13 @@
+<% layout("layout/boilerplate.ejs") %>
+
+    <body>
+        <form method="get" action="http://localhost:3000/listings" class="container mt-3 mb-3">
+            <div class="row">
+                <div class="alert text-center offset-3 col-6 alert-danger alert-dismissible fade show" role="alert">
+                    <h4 class="text-center">Error</h4>
+                    <strong><%= message %></strong>
+                    <p><a href="/listings">Back to Home</a></p>
+                </div>
+            </div>
+        </form>
+    </body>

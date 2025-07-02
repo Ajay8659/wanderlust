@@ -1,0 +1,114 @@
+<% layout("layout/boilerplate.ejs") %>
+
+  <body>
+    <div class="row mt-3">
+      <div class="col-12 col-lg-10 col-md-8 offset-lg-1 offset-md-2">
+        <h3>
+          <%= listing.title %>
+        </h3>
+      </div>
+      <div class="col-12 col-lg-10 col-md-8 offset-lg-1 offset-md-2">
+        <div class="card card-border img-card">
+          <img src="<%= listing.image.url %>" class="card-img-top show-img" alt="<%= listing.image.filename %>">
+          <div class="card-body">
+            <p class="card-text">
+              <i><%=listing.owner.username %></i><br>
+                <%= listing.description %>
+                  </br>&#8377; <%= listing.price.toLocaleString("en-IN") %>
+                    <br>
+                    <%= listing.location %>
+                      <br>
+                      <%= listing.country %>
+            </p>
+          </div>
+        </div>
+      </div>
+
+
+      <% if(currentUser && currentUser._id.equals(listing.owner._id)) { %>
+        <div class="col-12 col-lg-10 col-md-8 offset-lg-1 offset-md-2 d-flex">
+          <a href="/listings/<%= listing._id %>/edit" class="btn btn-dark add-btn me-3">Edit</a>
+          <form method="POST" action="/listings/<%=listing._id%>?_method=DELETE">
+            <button class="btn btn-dark add-btn">Delete</button>
+          </form>
+        </div>
+        <% } %>
+
+        <!-- // comment Block -->
+          <div class="col-12 col-lg-10 col-md-8 offset-lg-1 offset-md-2 mb-3">
+            <% if(currentUser){ %>
+            <h4>Leav a Comment</h4>
+            <form action="/listings/<%= listing._id %>/reviews" method="POST" class="needs-validation" novalidate>
+
+                <label for="rating">Rate US</label>
+                <input type="range" name="review[rating]" id="rating" class="form-range" min="1" max="5" step="1"
+                  value="0" />
+
+              <div class="mb-3">
+                <label for="comment">Comment</label>
+                <textarea name="review[comment]" id="comment" class="form-control" rows="5" cols="30"
+                  placeholder="Enter your comment here..." required></textarea>
+                <div class="invalid-feedback">
+                  Please leave a comment! 🙂
+                </div>
+                <div class="valid-feedback">
+                  Good! <i class="fa-regular fa-thumbs-up"></i>
+                </div>
+              </div>
+              <button class="btn btn-outline-dark">Submit</button>
+            </form>
+            <% } %>
+          </div>
+
+
+          <!-- reviews block -->
+
+          <div class="col-12 col-lg-10 col-md-8 offset-lg-1 offset-md-2 ">
+            <% listing.reviews.forEach((review)=>{ %>
+              <div class="container my-5 p-0">
+                <div class="card p-4">
+                  <h4 class="mb-2"><span id="reviewer">@<%= review.author.username %>
+                    </span></h4>
+                  <p class="text-muted">
+                    <i class="bi bi-calendar"></i> Posted on <span id="date">
+                      <%= review.createdAt.toLocaleDateString("en-IN") %>
+                    </span>
+                  </p>
+
+                  <div class="mb-3">
+                    <% for (let i=1; i <=5; i++) { %>
+                      <% if (i <=review.rating) { %>
+                        <i class="bi bi-star-fill text-warning"></i>
+                        <% } else { %>
+                          <i class="bi bi-star text-warning"></i>
+                          <% } %>
+                            <% } %>
+                              <span id="rating-stars" class="text-warning fs-10"></span>
+                              <span class="ms-2 fs-11" id="rating-value">
+                                <%= review.rating %>/5
+                              </span>
+                  </div>
+                  <blockquote class="blockquote ">
+                    <p class="mb-0" id="review-body">
+                      <%= review.comment %>
+                    </p>
+                  </blockquote>
+                  <% if(currentUser && currentUser._id.equals(listing.owner._id)) { %>
+                  <div class="mt-4 d-flex">
+                    <form action="/listings/<%= listing._id %>/edit" method="GET" class="me-2">
+                      <button class="btn btn-outline-primary btn-sm"><i class="bi bi-pencil"></i> Edit</button>
+                    </form>
+                    <form action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE" method="POST"
+                      class="ms-2">
+                      <button class="btn btn-outline-danger btn-sm"><i class="bi bi-trash"></i> Delete</button>
+                    </form>
+                  </div>
+                  <% } %>
+                </div>
+              </div>
+              <% }) %>
+          </div>
+    </div>
+  </body>
+
+  <!--  Script to dynamically generate stars -->
