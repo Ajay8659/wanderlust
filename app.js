@@ -1,3 +1,4 @@
+
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
@@ -17,11 +18,11 @@ const localStrategy = require("passport-local");
 const Listing = require("./models/listing.js");
 const { setHeapSnapshotNearHeapLimit } = require("v8");
 
-
 // MongoDB connection URL
 // const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
 
-const MONGO_URL = "mongodb+srv://mongodb:ajay123@cluster0.uw24ovi.mongodb.net/wanderlust?retryWrites=true&w=majority&appName=Cluster0";
+const MONGO_URL =
+  "mongodb+srv://mongodb:ajay123@cluster0.uw24ovi.mongodb.net/wanderlust?retryWrites=true&w=majority&appName=Cluster0";
 
 // Database Error Handling
 main()
@@ -45,7 +46,6 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 
-
 //creating a sessionoption object
 const sessionOption = {
   secret: "mySuperSecretCode",
@@ -55,8 +55,8 @@ const sessionOption = {
     httpOnly: true,
     secure: false, // Set to true if using HTTPS
     expire: Date.now() + 7 * 60 * 60 * 24 * 1000, // 7 days
-    maxAge: 1000 * 60 * 60 * 24 * 7 // 7 days
-  }
+    maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+  },
 };
 
 //Express Session Middleware
@@ -73,16 +73,13 @@ passport.use(new localStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-
-
 //Setting up local variables for flash messages
 app.use((req, res, next) => {
-    res.locals.currentUser = req.user; // Set current user for views
-    res.locals.success = req.flash("success");
-    res.locals.error = req.flash("error");
-    next();
+  res.locals.currentUser = req.user; // Set current user for views
+  res.locals.success = req.flash("success");
+  res.locals.error = req.flash("error");
+  next();
 });
-
 
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
@@ -97,9 +94,12 @@ app.get(
 );
 
 // 404 Route
-app.all("*",wrapAsync(async (req, res, next) => {
-  next(new ExpressError("Page not Found", 404));
-}));
+app.all(
+  "*",
+  wrapAsync(async (req, res, next) => {
+    next(new ExpressError("Page not Found", 404));
+  })
+);
 
 //Error Handling Middleware
 app.use((err, req, res, next) => {

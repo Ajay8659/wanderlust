@@ -115,3 +115,33 @@ body {
 .img-card{
     border: none !important;
 }
+
+.fa-arrow-up{
+    font-size: 2rem;
+    color: rgba(255, 255, 255, 0.849);
+    cursor: pointer;
+    width: 3rem;
+    height: 3rem;
+    padding: 0.5rem 0.7rem;
+    border-radius: 50%;
+    background-color: #fe424d;
+    margin-top: 1rem;
+}
+
+.review-logo{
+    width: 40px;
+    height: 40px;
+    border: #fe424d 2px solid;
+    border-radius: 50%;
+    overflow: hidden;
+}
+.reviewlu{
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+#reviewer{
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #ec4954;
+}

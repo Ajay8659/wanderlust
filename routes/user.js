@@ -3,20 +3,24 @@ const router = express.Router();
 const wrapAsync = require("../utils/wrapAscync.js");
 const User = require("../models/user.js");
 const passport = require("passport");
-const {saveRedirectUrl} = require("../middleware.js");
+const { saveRedirectUrl } = require("../middleware.js");
+
 
 router.get("/signup", (req, res) => {
   res.render("user/signup.ejs");
 });
 
-
 //Signup Route
 router.post(
   "/signup",
   wrapAsync(async (req, res, next) => {
+    console.log(req.file); // Check if the file is being uploaded correctly
     try {
       const { username, email, password } = req.body;
-      const newUser = new User({ email, username });
+      const newUser = new User({
+        email,
+        username
+      });
       const registeredUser = await User.register(newUser, password);
       // Automatically log in the user after registration
       req.login(registeredUser, (err) => {
@@ -50,9 +54,10 @@ router.post(
   (req, res) => {
     req.flash("success", `Welcome back ${req.user.username}!`);
     return res.redirect(res.locals.redirectUrl || "/listings");
-  });
+  }
+);
 
-  //logout route
+//logout route
 router.get("/logout", (req, res, next) => {
   req.logout((err) => {
     if (err) {

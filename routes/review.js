@@ -25,6 +25,15 @@ router.post("/", isLoggedin, reviewValidation, wrapAsync(async (req, res, next) 
     res.redirect(`/listings/${id}`);
 }));
 
+router.patch("/:reviewId", isReviewOwner, reviewValidation, wrapAsync(async (req, res, next) => {
+    const { id, reviewId } = req.params;
+    const updatedReview = await Review.findByIdAndUpdate(reviewId, req.body.review, { new: true });
+    // updatedReview.updatedAt = Date.now(); // Update the timestamp
+    await updatedReview.save();
+    req.flash("success", "Review Updated!");
+    res.redirect(`/listings/${id}`);
+}));
+
 //Delete Review Route
 router.delete("/:reviewId",isReviewOwner, wrapAsync(async (req, res, next) => {
     const { id, reviewId } = req.params;
